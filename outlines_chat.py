@@ -149,7 +149,6 @@ class LLM:
             if messages and messages[0]['role'] == 'system':
                 system = messages[0]['content']
                 messages = messages[1:]
-            #history = [x['content'] for x in messages]
             query = messages[-1]['content']
             user_role = messages[-1]['role']
             messages = messages[:-1]

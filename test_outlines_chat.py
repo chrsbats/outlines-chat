@@ -4,7 +4,10 @@ import outlines
 
 llm = LLM("bartowski/openchat-3.5-0106-exl2",revision="5_0")
 
-# If you don't provide a chat template to ChatModel it will use the Jinja template provided with the model from huggingface.
+
+### EXAMPLE 1 - Basic chat mode with system prompt and history.
+
+# If you don't provide a ChatModel with a custom chat_template it will use the Jinja template that are automatically provided with the model from huggingface.
 model = ChatModel(llm)
 history = SimpleChatHistory(llm, system_instruction="You only respond in French.", user_role = 'user', llm_role='assistant')
 text = model("Define AI in a short sentence.", history=history, temp=0.0, update_history=True, stop_at=['.'])
@@ -12,7 +15,10 @@ assert text.startswith("L'intelligence artificielle est un système")
 # One message for user, one for assistant
 assert len(history.data) == 2
 
-# Openchat models have a math reasoning mode.
+
+### EXAMPLE 2 - Chat with custom chat template.
+
+# Openchat models have a math reasoning mode. We will use this to do some math.
 @outlines.prompt
 def math_template(query,system,messages,user_role,llm_role):
     '''<s>{% for message in messages %}
@@ -29,7 +35,9 @@ text = math_model("10.3 − 7988.8133 =", temp=0.0, stop_at=['Math Correct'])
 text = text[:text.rfind('Math Correct')].strip()
 assert text == "10.3 - 7988.8133 = -7978.5133"
 
-# Regex mode.
+
+### EXAMPLE 3 - Chat with regex output.
+
 text = model("What is the IP address of the Google DNS servers?", temp=0.0, max_new_tokens=30)
 assert text.startswith("The IP addresses of the Google DNS servers are")
 

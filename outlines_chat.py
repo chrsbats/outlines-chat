@@ -190,8 +190,6 @@ class ChatModel:
             history = SimpleChatHistory(self.llm)
             update_history = False
 
-        prompt = history.build_prompt(prompt, prefix= prefix, chat_template = self.chat_template)
-
         if isa(stop_at,str):
             stop_at = [stop_at] + [self.llm.tokenizer.eos_token]
         else:
@@ -201,6 +199,7 @@ class ChatModel:
             prefix = '<'+doc_tag+'>' + prefix
             stop_at = stop_at + ['</'+doc_tag+'>']
 
+        prompt = history.build_prompt(prompt, prefix= prefix, chat_template = self.chat_template)
         response = self.llm(prompt, temp = temp, stop_at = stop_at, max_tokens = max_new_tokens, regex = regex, json = json)
         
         if update_history:
